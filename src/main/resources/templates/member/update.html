@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<div class="content-container" layout:fragment="content">
+	<body>
+	<div class="update-container">
+		<h1>개인정보 수정</h1>
+
+		<!-- 비밀번호 인증 -->
+		<div id="password-auth-section">
+			<p>개인정보 수정을 진행하려면 현재 비밀번호를 입력해주세요</p>
+			<form id="password-auth-form">
+				<label for="current-password">현재 비밀번호</label>
+				<input type="password" id="current-password" name="currentPassword" required>
+				<button type="button" id="auth-button" class="btn login-submit-btn">인증</button>
+			</form>
+		</div>
+
+		<!-- 수정 폼 -->
+		<div id="update-form-section" style="display: none;">
+			<form th:action="@{/member/update-info}" method="post" th:object="${memberDTO}" onsubmit="return validateForm()">
+				<input type="hidden" name="_method" value="put">
+
+				<!-- 이메일 (수정 불가) -->
+				<label for="email">이메일은 수정이 불가능합니다.</label>
+				<input type="email" id="email" name="memberEmail" th:value="${memberDTO.memberEmail}" readonly>
+
+				<!-- 이름 -->
+				<label for="name">이름</label>
+				<input type="text" id="name" name="memberName" th:value="${memberDTO.memberName}" required>
+				<span id="name-error" class="error-message"></span>
+
+				<!-- 새 비밀번호 -->
+				<label for="new-password">새 비밀번호</label>
+				<input type="password" name="memberPassword" id="new-password">
+				<span th:if="${#fields.hasErrors('memberPassword')}" th:errors="*{memberPassword}" style="color: red;"></span>
+				<span id="password-error" class="error-message" style="color: red;"></span>
+				<br>
+
+				<!-- 커스텀 예외 메시지 -->
+				<p th:if="${customError}" th:text="${customError}" style="color: red; font-size: 14px;"></p>
+
+				<!-- 비밀번호 확인 -->
+				<label for="confirm-password">비밀번호 확인</label>
+				<input type="password" id="confirm-password">
+				<span id="confirm-password-error" class="error-message" style="color: red;"></span>
+
+				<button type="submit" class="btn login-submit-btn">수정하기</button>
+			</form>
+		</div>
+	</div>
+	<script>
+        document.getElementById('auth-button').addEventListener('click', () => {
+            const password = document.getElementById('current-password').value;
+
+            axios.post('/api/member/verify-password', { password: password })
+                .then((response) => {
+                    if (response.data.success) {
+                        alert('비밀번호 인증 성공!');
+                        document.getElementById('password-auth-section').style.display = 'none';
+                        document.getElementById('update-form-section').style.display = 'block';
+                    } else {
+                        alert('비밀번호가 일치하지 않습니다.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('오류가 발생했습니다. 다시 시도해주세요.');
+                });
+        });
+
+        // 새로운 비밀번호, 이름 유효성 검사 및 폼 제출
+        document.querySelector('#update-form-section form').addEventListener('submit', (event) => {
+            let valid = true;
+
+            // 새 비밀번호 검증
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const passwordError = document.getElementById('password-error');
+            const confirmPasswordError = document.getElementById('confirm-password-error');
+
+            passwordError.textContent = "";  // 기존 에러 메시지 초기화
+            confirmPasswordError.textContent = "";
+
+            if (newPassword.length < 8 || newPassword.length > 20) {
+                passwordError.textContent = "비밀번호는 8~20자로 설정해야 합니다.";
+                valid = false;
+            }
+
+            if (newPassword !== confirmPassword) {
+                confirmPasswordError.textContent = "새 비밀번호가 일치하지 않습니다.";
+                valid = false;
+            }
+
+            // 이름 검증
+            const name = document.getElementById('name').value;
+            const nameError = document.getElementById('name-error');
+            nameError.textContent = "";  // 기존 에러 메시지 초기화
+
+            if (name.length < 2 || name.length > 15) {
+                nameError.textContent = "이름은 2~15자로 설정해야 합니다.";
+                valid = false;
+            }
+
+            if (!valid) {
+                event.preventDefault();  // 폼 제출 방지
+            }
+        });
+	</script>
+	</body>
+</div>
+</html>

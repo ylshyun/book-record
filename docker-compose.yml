@@ -1,0 +1,34 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: book-record-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - docker-network
+
+  app:
+    build: .
+    container_name: book-record-app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://book-record-mysql:3306/${MYSQL_DATABASE}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mysql
+    networks:
+      - docker-network
+
+volumes:
+  mysql_data:
+
+networks:
+  docker-network:
+    driver: bridge

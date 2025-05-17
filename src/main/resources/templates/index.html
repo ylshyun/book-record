@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<div class="content-container"  layout:fragment="content">
+	<body>
+	<div th:if="${message}" class="alert alert-success">
+		<p th:text="${message}"></p>
+	</div>
+	</body>
+	<!--리뷰 목록-->
+	<div class="mypage-review-list">
+		<div th:each="review : ${reviews.content}" class="mypage-review-item">
+			<div class="mypage-review-content">
+				<h3 th:text="${review.reviewTitle}"></h3>
+				<p th:text="${review.reviewContent}"></p>
+			</div>
+			<br>
+			<div class="mypage-book-info">
+				<a th:href="@{/books/{bookIsbn}(bookIsbn=${review.bookIsbn})}">
+					<img th:src="${review.bookImageUrl}" alt="책 이미지">
+					<p th:text="'제목: ' + ${review.bookTitle}"></p>
+					<p th:text="'저자: ' + ${review.bookAuthor}"></p>
+					<p th:text="'출판사: ' + ${review.bookPublisher}"></p>
+				</a>
+			</div>
+		</div>
+	</div>
+	<!-- 페이징 -->
+	<div class="mypage-pagination" th:if="${totalPages > 0}">
+    <span th:if="${currentPage > 0}">
+        <a th:href="@{/{page}(page=${currentPage - 1})}">«</a>
+    </span>
+
+		<span th:each="i : ${#numbers.sequence(1, totalPages)}">
+        <a th:href="@{/{page}(page=${i - 1})}" th:text="${i}"
+           th:classappend="${currentPage + 1 == i} ? 'active'"></a>
+    </span>
+
+		<span th:if="${currentPage < totalPages - 1}">
+        <a th:href="@{/{page}(page=${currentPage + 1})}">»</a>
+    </span>
+	</div>
+</div>
+</html>

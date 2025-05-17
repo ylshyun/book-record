@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<div class="content-container" layout:fragment="content">
+	<body>
+	<div class="mypage-body">
+		<div class="mypage-member-info">
+			<div class="mypage-member-header">
+				<h3>회원 정보</h3>
+				<div class="mypage-member-header-buttons">
+					<a th:href="@{/member/update}">
+						<button class="btn btn-outline-dark">수정</button>
+					</a>
+					<form th:action="@{/member/delete}" method="post" id="deleteMemberForm">
+						<input type="hidden" name="_method" value="delete">
+						<button type="button" class="btn btn-outline-dark" onclick="confirmDeletion()">탈퇴</button>
+					</form>
+				</div>
+			</div>
+			<p th:text="'이메일: ' + ${memberEmail}"></p>
+			<p th:text="'이름: ' + ${memberName}"></p>
+		</div>
+		<!--작성한 리뷰 목록-->
+		<div class="mypage-review-list">
+			<div th:if="${reviews != null and not #lists.isEmpty(reviews.content)}">
+			<div th:each="review : ${reviews.content}" class="mypage-review-item">
+				<div class="mypage-review-content">
+					<h3 th:text="${review.reviewTitle}"></h3>
+					<p th:text="${review.reviewContent}"></p>
+				</div>
+				<br>
+				<div class="mypage-book-info">
+					<a th:href="@{/books/{bookIsbn}(bookIsbn=${review.bookIsbn})}">
+						<img th:src="${review.bookImageUrl}" alt="책 이미지">
+						<p th:text="'제목: ' + ${review.bookTitle}"></p>
+						<p th:text="'저자: ' + ${review.bookAuthor}"></p>
+						<p th:text="'출판사: ' + ${review.bookPublisher}"></p>
+					</a>
+				</div>
+			</div>
+		</div>
+			</div>
+		<!-- 페이징 -->
+		<div class="mypage-pagination" th:if="${totalPages > 1}">
+			<button th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+			        th:onclick="'location.href=\'/mypage?page=' + ${i} + '&size=10\''"
+			        th:text="${i + 1}"
+			        th:classappend="${i == currentPage} ? 'active' : ''">
+			</button>
+		</div>
+	</div>
+	<script>
+        function confirmDeletion() {
+            if (confirm("탈퇴하시겠습니까?")) {
+                document.getElementById("deleteMemberForm").submit();
+            } else {
+                alert("탈퇴가 취소되었습니다.");
+            }
+        }
+	</script>
+	</body>
+</div>
+</html>
