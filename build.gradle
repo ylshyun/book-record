@@ -43,7 +43,7 @@ dependencies {
 
 	// Thymeleaf Layout, Security Extensions
 	implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '3.0.0'
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
 
 	// Development Tools
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
