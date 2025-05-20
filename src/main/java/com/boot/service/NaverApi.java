@@ -23,10 +23,10 @@ public class NaverApi {
 
     private static final String apiURL = "https://openapi.naver.com/v1/search/book.json?query=";
 
-    @Value("${naver.client.id}")
+    @Value("${naver_client_id}")
     private String clientId;
 
-    @Value("${naver.client.secret}")
+    @Value("${naver_client_secret}")
     private String clientSecret;
 
     public List<BookDTO> searchBooksByKeyword(String keyword) {
@@ -39,7 +39,6 @@ public class NaverApi {
             con.setRequestMethod("GET");
             con.setRequestProperty("X-Naver-Client-Id", clientId);
             con.setRequestProperty("X-Naver-Client-Secret", clientSecret);
-
             StringBuilder response = getStringBuilder(con);
             con.disconnect();
 
@@ -52,16 +51,8 @@ public class NaverApi {
                 JsonObject book = jsonArray.get(i).getAsJsonObject();
 
                 // isbn이 존재하고, 비어있지 않은 경우에만 리스트에 넣기
-                if (book.has("isbn") && !book.get("isbn").getAsString().trim().isEmpty()){
-                    bookDtoList.add(BookDTO.builder()
-                            .bookTitle(book.get("title").getAsString())
-                            .bookAuthor(book.get("author").getAsString())
-                            .bookPublisher(book.get("publisher").getAsString())
-                            .bookDiscount(book.get("discount").getAsInt())
-                            .bookIsbn(book.get("isbn").getAsString())
-                            .bookImageURL(book.get("image").getAsString())
-                            .bookDescription(book.get("description").getAsString())
-                            .build());
+                if (book.has("isbn") && !book.get("isbn").getAsString().trim().isEmpty()) {
+                    bookDtoList.add(BookDTO.builder().bookTitle(book.get("title").getAsString()).bookAuthor(book.get("author").getAsString()).bookPublisher(book.get("publisher").getAsString()).bookDiscount(book.get("discount").getAsInt()).bookIsbn(book.get("isbn").getAsString()).bookImageURL(book.get("image").getAsString()).bookDescription(book.get("description").getAsString()).build());
                 }
             }
             return bookDtoList;
