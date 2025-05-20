@@ -9,10 +9,10 @@ import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @EnableJpaAuditing //JPA의 AuditingEntityListner를 활성화
-public class BbApplication {
+public class BookRecordApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BbApplication.class, args);
+		SpringApplication.run(BookRecordApplication.class, args);
 	}
 
 	@Bean
