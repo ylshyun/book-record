@@ -57,7 +57,7 @@ function loadReviewList(page=0, size=10) {
                         <span class="title-text">${review.reviewTitle}</span>
                         ${buttons}
                     </div>
-                    <span class="review-writer">${review.memberName} | ${review.modifiedDate}</span>
+                    <span class="review-writer">${review.memberName} | ${review.modifiedDate}</span><br>
                     <div class="review-content">${review.reviewContent}</div>
                 `;
                 reviewList.appendChild(div);
