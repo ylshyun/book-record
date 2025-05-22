@@ -151,8 +151,6 @@ public class MemberController {
         // 로그아웃 처리
         new SecurityContextLogoutHandler().logout(request, response, null);
 
-        // 탈퇴 완료 메시지 리다이렉트 메인 페이지로 설정
-        redirectAttributes.addFlashAttribute("message", "회원탈퇴가 완료되었습니다.");
         return "redirect:/";
     }
 }

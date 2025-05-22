@@ -3,11 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default}">
 <div class="content-container"  layout:fragment="content">
-	<body>
-	<div th:if="${message}" class="alert alert-success">
-		<p th:text="${message}"></p>
-	</div>
-	</body>
+	<br>
 	<!--리뷰 목록-->
 	<div class="mypage-review-list">
 		<div th:each="review : ${reviews.content}" class="mypage-review-item">
