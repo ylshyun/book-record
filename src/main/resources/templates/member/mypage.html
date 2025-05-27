@@ -3,7 +3,6 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default}">
 <div class="content-container" layout:fragment="content">
-	<body>
 	<div class="mypage-body">
 		<div class="mypage-member-info">
 			<div class="mypage-member-header">
@@ -24,25 +23,25 @@
 		<!--작성한 리뷰 목록-->
 		<div class="mypage-review-list">
 			<div th:if="${reviews != null and not #lists.isEmpty(reviews.content)}">
-			<div th:each="review : ${reviews.content}" class="mypage-review-item">
-				<div class="mypage-review-content">
-					<h3 th:text="${review.reviewTitle}"></h3>
-					<p th:text="${review.reviewContent}"></p>
-				</div>
-				<br>
-				<div class="mypage-book-info">
-					<a th:href="@{/books/{bookIsbn}(bookIsbn=${review.bookIsbn})}">
+				<div th:each="review : ${reviews.content}" class="mypage-review-item">
+					<div class="mypage-review-content">
+						<h3 th:text="${review.reviewTitle}"></h3>
+						<p th:text="${review.reviewContent}"></p>
+					</div>
+					<br>
+					<a class="mypage-book-info" th:href="@{/books/{bookIsbn}(bookIsbn=${review.bookIsbn})}">
 						<img th:src="${review.bookImageUrl}" alt="책 이미지">
-						<p th:text="'제목: ' + ${review.bookTitle}"></p>
-						<p th:text="'저자: ' + ${review.bookAuthor}"></p>
-						<p th:text="'출판사: ' + ${review.bookPublisher}"></p>
+						<div class="mypage-book-text">
+							<p th:text="${review.bookTitle}"></p>
+							<p th:if="${not #strings.isEmpty(review.bookAuthor)}" th:text="${review.bookAuthor} + ' 저'"></p>
+							<p th:text="${review.bookPublisher}"></p>
+						</div>
 					</a>
 				</div>
 			</div>
 		</div>
-			</div>
 		<!-- 페이징 -->
-		<div class="mypage-pagination" th:if="${totalPages > 1}">
+		<div class="pagination" th:if="${totalPages > 1}">
 			<button th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
 			        th:onclick="'location.href=\'/mypage?page=' + ${i} + '&size=10\''"
 			        th:text="${i + 1}"
@@ -60,6 +59,5 @@
             }
         }
 	</script>
-	</body>
 </div>
 </html>

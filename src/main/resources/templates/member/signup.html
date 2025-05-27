@@ -3,108 +3,47 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default}">
 <head>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
-<div class="signup-form-container" layout:fragment="content">
-    <form action="/signup" th:object="${memberSignUpDTO}" method="post" onsubmit="return validateForm()">
-        <h2 class="signup-heading">회원가입</h2><br/>
+<div class="signup-wrapper" layout:fragment="content">
+	<div class="signup-form-container">
+		<form action="/signup" th:object="${memberSignUpDTO}" method="post" onsubmit="return validateForm()">
+			<h2 class="signup-heading">회원가입</h2><br/>
 
-        <!-- 이메일 입력 -->
-        <div class="email-container">
-            <input type="text" class="signup-form-mem" id="memberEmail" placeholder="이메일" required th:field="*{memberEmail}"
-                   oninput="resetCheckStatus()"> @
-            <select class="signup-form-select" id="memberEmailOption" th:field="*{memberEmailOption}"
-                    onchange="resetCheckStatus()">
-                <option value="naver.com">naver.com</option>
-                <option value="gmail.com">gmail.com</option>
-                <option value="daum.net">daum.net</option>
-                <option value="nate.com">nate.com</option>
-            </select>
-            <input type="button" value="중복확인" class="btn login-submit-btn small-btn" onclick="checkEmail()">
-        </div>
+			<!-- 이메일 입력 -->
+			<div class="email-container">
+				<input type="text" class="signup-form-mem" id="memberEmail" placeholder="이메일" required
+				       th:field="*{memberEmail}" oninput="resetCheckStatus()"> @
+				<select class="signup-form-select" id="memberEmailOption" th:field="*{memberEmailOption}"
+				        onchange="resetCheckStatus()">
+					<option value="naver.com">naver.com</option>
+					<option value="gmail.com">gmail.com</option>
+					<option value="daum.net">daum.net</option>
+					<option value="nate.com">nate.com</option>
+				</select>
+				<input type="button" value="중복확인" class="btn login-submit-btn small-btn" onclick="checkEmail()">
+			</div>
 
-        <!-- 비밀번호 입력 -->
-        <div>
-            <input type="password" class="signup-form-mem" id="memberPassword" placeholder="비밀번호" required th:field="*{memberPassword}"
-                   oninput="resetPasswordCheck()">
-            <span th:if="${#fields.hasErrors('memberPassword')}" th:errors="*{memberPassword}" style="color: red;"></span>
-            <!-- 커스텀 예외 메시지 -->
-            <p th:if="${customError}" th:text="${customError}" style="color: red; font-size: 14px;"></p>
-        </div>
+			<!-- 비밀번호 입력 -->
+			<div>
+				<input type="password" class="signup-form-mem" id="memberPassword" placeholder="비밀번호" required
+				       th:field="*{memberPassword}" oninput="resetPasswordCheck()">
+				<span th:if="${#fields.hasErrors('memberPassword')}" th:errors="*{memberPassword}"
+				      style="color: red;"></span>
+				<p th:if="${customError}" th:text="${customError}" style="color: red; font-size: 14px;"></p>
+			</div>
 
-        <!-- 이름 입력 -->
-        <div>
-            <input type="text" class="signup-form-mem" id="memberName" placeholder="이름" required th:field="*{memberName}">
-            <span th:if="${#fields.hasErrors('memberName')}" th:errors="*{memberName}" style="color: red;"></span>
-        </div>
+			<!-- 이름 입력 -->
+			<div>
+				<input type="text" class="signup-form-mem" id="memberName" placeholder="이름" required
+				       th:field="*{memberName}">
+				<span th:if="${#fields.hasErrors('memberName')}" th:errors="*{memberName}" style="color: red;"></span>
+			</div>
 
-        <input type="submit" value="가입하기" class="btn login-submit-btn">
-    </form>
-
-    <script>
-        let isEmailChecked = false;
-
-        function checkEmail() {
-            const email = document.getElementById("memberEmail").value;
-            const emailOption = document.getElementById("memberEmailOption").value;
-            const fullEmail = email + "@" + emailOption;
-
-            axios.get(`/api/member/check-email?email=${fullEmail}`)
-                    .then(function (response) {
-                        if (response.data.exists) {
-                            alert("이 이메일은 이미 사용 중입니다.");
-                            isEmailChecked = false;
-                        } else {
-                            alert("사용 가능한 이메일입니다.");
-                            isEmailChecked = true;
-                        }
-                    })
-                    .catch(function (error) {
-                        console.error("이메일 중복 확인 오류:", error);
-                        alert("오류가 발생했습니다.");
-                    });
-        }
-
-        function resetCheckStatus() {
-            isEmailChecked = false;
-        }
-
-        function resetPasswordCheck() {
-            document.getElementById("passwordError").innerText = "";
-        }
-
-        function validateForm() {
-            const email = document.getElementById("memberEmail").value;
-            const password = document.getElementById("memberPassword").value;
-            const name = document.getElementById("memberName").value;
-
-            if (!isEmailChecked) {
-                alert("이메일 중복 확인 후 가입이 가능합니다.");
-                return false;
-            }
-
-            // 비밀번호 길이 검증
-            if (password.length < 8 || password.length > 20) {
-                alert("비밀번호는 8~20자로 설정해야 합니다.");
-                return false;
-            }
-
-            // 비밀번호가 이메일 앞부분과 같은지 체크
-            if (password === email) {
-                alert("비밀번호는 이메일과 동일하게 설정할 수 없습니다.");
-                return false;
-            }
-
-            // 이름 길이 검증
-            if (name.length < 2 || name.length > 15) {
-                alert("이름은 2~15자로 설정해야 합니다.");
-                return false;
-            }
-
-            return true;
-        }
-    </script>
+			<input type="submit" value="가입하기" class="btn login-submit-btn">
+		</form>
+	</div>
 </div>
 </body>
 </html>

@@ -3,57 +3,59 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default}">
 <head>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="login-container">
-        <h2 class="login-title">로그인</h2>
-        <form onsubmit="return login(event);">
-            <div class="login-form-group">
-                <input type="text" class="login-form-input" name="username" placeholder="이메일" required>
-            </div>
-            <div class="login-form-group">
-                <input type="password" class="login-form-input" name="password" placeholder="비밀번호" required>
-            </div>
-            <input class="btn login-submit-btn" type="submit" value="로그인">
-        </form>
-        <p class="login-text">아직 회원이 아니신가요? <a href="/signup">회원가입</a></p>
-    </div>
-    <script>
-    async function login(event) {
-    event.preventDefault(); // 기본 폼 제출 방지
+	<div class="login-wrapper">
+		<div class="login-container">
+			<h2 class="login-title">로그인</h2>
+			<form onsubmit="return login(event);">
+				<div class="login-form-group">
+					<input type="text" class="login-form-input" name="username" placeholder="이메일" required>
+				</div>
+				<div class="login-form-group">
+					<input type="password" class="login-form-input" name="password" placeholder="비밀번호" required>
+				</div>
+				<input class="btn login-submit-btn" type="submit" value="로그인">
+			</form>
+			<p class="login-text">아직 회원이 아니신가요? <a href="/signup">회원가입</a></p>
+		</div>
+	</div>
+			<script>
+                async function login(event) {
+                    event.preventDefault(); // 기본 폼 제출 방지
 
-            const email = document.getElementsByName("username")[0].value;
-            const password = document.getElementsByName("password")[0].value;
+                    const email = document.getElementsByName("username")[0].value;
+                    const password = document.getElementsByName("password")[0].value;
 
-            try {
-                // 이메일 존재 여부 확인
-                const emailCheckResponse = await axios.get(`/api/member/check-email?email=${email}`);
-                if (!emailCheckResponse.data.exists) {
-                    alert("존재하지 않는 이메일입니다.");
-                    return;
+                    try {
+                        // 이메일 존재 여부 확인
+                        const emailCheckResponse = await axios.get(`/api/member/check-email?email=${email}`);
+                        if (!emailCheckResponse.data.exists) {
+                            alert("존재하지 않는 이메일입니다.");
+                            return;
+                        }
+
+                        // 로그인 요청 (URLSearchParams를 사용하여 json -> form 방식으로 데이터 보내기)
+                        await axios.post("/loginProc", new URLSearchParams({
+                            username: email,
+                            password: password
+                        }));
+
+                        // 로그인 성공 시 인덱스 페이지로 이동
+                        return window.location.href = "/";
+
+                    } catch (error) {
+                        // 서버가 401 응답을 주면 JSON 데이터를 받아서 alert 표시
+                        if (error.response && error.response.status === 401) {
+                            alert(error.response.data.message);
+                        } else {
+                            alert("로그인 중 문제가 발생했습니다. 다시 시도해주세요.");
+                        }
+                    }
                 }
-
-                // 로그인 요청 (URLSearchParams를 사용하여 json -> form 방식으로 데이터 보내기)
-                await axios.post("/loginProc", new URLSearchParams({
-                    username: email,
-                    password: password
-                }));
-
-                // 로그인 성공 시 인덱스 페이지로 이동
-                return window.location.href = "/";
-
-            } catch (error) {
-                // 서버가 401 응답을 주면 JSON 데이터를 받아서 alert 표시
-                if (error.response && error.response.status === 401) {
-                    alert(error.response.data.message);
-                } else {
-                    alert("로그인 중 문제가 발생했습니다. 다시 시도해주세요.");
-                }
-            }
-        }
-    </script>
+			</script>
 </div>
 </body>
 </html>

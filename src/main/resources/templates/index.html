@@ -2,40 +2,52 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default}">
-<div class="content-container"  layout:fragment="content">
-	<br>
-	<!--리뷰 목록-->
-	<div class="mypage-review-list">
-		<div th:each="review : ${reviews.content}" class="mypage-review-item">
-			<div class="mypage-review-content">
-				<h3 th:text="${review.reviewTitle}"></h3>
-				<p th:text="${review.reviewContent}"></p>
-			</div>
-			<br>
-			<div class="mypage-book-info">
-				<a th:href="@{/books/{bookIsbn}(bookIsbn=${review.bookIsbn})}">
+<div class="content-container" layout:fragment="content">
+	<div class="py-5">
+		<div class="container custom-search-container">
+			<form class="d-flex justify-content-center align-items-center custom-search-form"
+			      th:action="@{/books/search}" method="get">
+				<input type="text" name="keyword" th:value="${keyword}"
+				       class="form-control me-2 custom-search-input"
+				       placeholder="책 제목 또는 작가를 검색하세요">
+				<button class="btn btn-outline-dark" type="submit">Search</button>
+			</form>
+		</div>
+	</div>
+	<div class="mypage-body">
+		<!--리뷰 목록-->
+		<div class="mypage-review-list">
+			<div th:each="review : ${reviews.content}" class="mypage-review-item">
+				<div class="mypage-review-content">
+					<h3 th:text="${review.reviewTitle}"></h3>
+					<p th:text="${review.reviewContent}"></p>
+				</div>
+				<br>
+				<a class="mypage-book-info" th:href="@{/books/{bookIsbn}(bookIsbn=${review.bookIsbn})}">
 					<img th:src="${review.bookImageUrl}" alt="책 이미지">
-					<p th:text="'제목: ' + ${review.bookTitle}"></p>
-					<p th:text="'저자: ' + ${review.bookAuthor}"></p>
-					<p th:text="'출판사: ' + ${review.bookPublisher}"></p>
+					<div class="mypage-book-text">
+						<p th:text="${review.bookTitle}"></p>
+						<p th:if="${not #strings.isEmpty(review.bookAuthor)}" th:text="${review.bookAuthor}+' 저'"></p>
+						<p th:text="${review.bookPublisher}"></p>
+					</div>
 				</a>
 			</div>
 		</div>
-	</div>
-	<!-- 페이징 -->
-	<div class="mypage-pagination" th:if="${totalPages > 0}">
-    <span th:if="${currentPage > 0}">
+		<!-- 페이징 -->
+		<div class="mypage-pagination" th:if="${totalPages > 1}">
+    <span th:if="${currentPage > 1}">
         <a th:href="@{/{page}(page=${currentPage - 1})}">«</a>
     </span>
 
-		<span th:each="i : ${#numbers.sequence(1, totalPages)}">
-        <a th:href="@{/{page}(page=${i - 1})}" th:text="${i}"
+			<span th:each="i : ${#numbers.sequence(1, totalPages)}">
+        <a th:href="@{/{page}(page=${i - 1})}" th:text="${i+1}"
            th:classappend="${currentPage + 1 == i} ? 'active'"></a>
     </span>
 
-		<span th:if="${currentPage < totalPages - 1}">
+			<span th:if="${currentPage < totalPages - 1}">
         <a th:href="@{/{page}(page=${currentPage + 1})}">»</a>
     </span>
+		</div>
 	</div>
 </div>
 </html>

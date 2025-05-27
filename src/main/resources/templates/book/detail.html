@@ -7,17 +7,28 @@
 </head>
 <body>
 <div class="content-container" layout:fragment="content">
+	<div class="py-5">
+		<div class="container custom-search-container">
+			<form class="d-flex justify-content-center align-items-center custom-search-form"
+			      th:action="@{/books/search}" method="get">
+				<input type="text" name="keyword" th:value="${keyword}"
+				       class="form-control me-2 custom-search-input"
+				       placeholder="책 제목 또는 작가를 검색하세요">
+				<button class="btn btn-outline-dark" type="submit">Search</button>
+			</form>
+		</div>
+	</div>
 	<!-- 책 상세 정보 -->
 	<div class="book-info">
-		<h2 class="detail-h2" th:text="${book.bookTitle}"></h2>
+		<h2 class="detail-h2" th:text="${book.bookTitle}"></h2><br>
 		<img class="detail-img" th:src="${book.bookImageURL}" alt="Book Image">
 		<div id="LoginMemberEmail" th:text="${LoginMemberEmail}" style="display: none;"></div>
-		<p>ISBN: <span class="detail-span" id="bookIsbn" th:text="${book.bookIsbn}"></span></p>
-		<p>저자: <span class="detail-span" th:text="${#strings.replace(book.bookAuthor, '^', ', ')}"></span></p>
-		<p>출판사: <span class="detail-span" th:text="${book.bookPublisher}"></span></p>
-		<p>가격: <span class="detail-span"
+		<p th:if="${not #strings.isEmpty(book.bookAuthor)}">저자 <span class="detail-span" th:text="${#strings.replace(book.bookAuthor, ' ^ ', ', ')}"></span></p>
+		<p>출판사 <span class="detail-span" th:text="${book.bookPublisher}"></span></p>
+		<p>가격 <span class="detail-span"
 		             th:text="${book.bookDiscount} == 0 ? '-원 (절판)' : ${#numbers.formatInteger(book.bookDiscount,3,'COMMA') + '원'}"></span>
 		</p>
+		<p>ISBN <span class="detail-span" id="bookIsbn" th:text="${book.bookIsbn}"></span></p><br>
 		<p class="description" th:text="${book.bookDescription}"></p>
 	</div>
 

@@ -3,36 +3,20 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 
 <div th:fragment="header">
-    <!-- Navigation-->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" th:href="@{/}">Book Record</a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                </ul>
-                <p>
-                    <br>
-                    <input type="button" sec:authorize="isAnonymous()" th:onclick="|location.href='@{/login}'|"
-                           value="로그인" class="btn btn-outline-dark">
-                    <input type="button" sec:authorize="isAnonymous()" th:onclick="|location.href='@{/signup}'|"
-                           value="회원가입" class="btn btn-outline-dark">
-                    <input type="button" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/logout}'|"
-                           value="로그아웃" class="btn btn-outline-dark">
-                    <input type="button" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/mypage}'|"
-                           value="마이페이지" class="btn btn-outline-dark">
-                </p>
+    <nav class="custom-navbar bg-dark py-3">
+        <div class="custom-navbar-container">
+            <a class="custom-navbar-logo" th:href="@{/}">Book Record</a>
+            <div class="custom-navbar-buttons">
+                <input type="button" sec:authorize="isAnonymous()" th:onclick="|location.href='@{/login}'|"
+                       value="로그인" class="btn btn-outline-light">
+                <input type="button" sec:authorize="isAnonymous()" th:onclick="|location.href='@{/signup}'|"
+                       value="회원가입" class="btn btn-outline-light">
+                <input type="button" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/logout}'|"
+                       value="로그아웃" class="btn btn-outline-light">
+                <input type="button" sec:authorize="isAuthenticated()" th:onclick="|location.href='@{/mypage}'|"
+                       value="마이페이지" class="btn btn-outline-light">
             </div>
         </div>
     </nav>
-    <!-- Header-->
-    <header class="bg-dark py-5">
-        <div class="container px-4 px-lg-5 my-5" style=width:700px>
-            <form class="d-flex" role="search" style=height:60px; th:action="@{/books/search}" method="get">
-                <input type="text" th:value="${keyword}" name="keyword" class="form-control me-2"
-                       placeholder="책 제목 또는 작가를 검색하세요" aria-label="Search">
-                <button class="btn btn-outline-light" type="submit">Search</button>
-            </form>
-        </div>
-    </header>
 </div>
 </html>

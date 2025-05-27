@@ -3,6 +3,17 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default}">
 <div class="content-container" layout:fragment="content">
+    <div class="py-5">
+        <div class="container custom-search-container">
+            <form class="d-flex justify-content-center align-items-center custom-search-form"
+                  th:action="@{/books/search}" method="get">
+                <input type="text" name="keyword" th:value="${keyword}"
+                       class="form-control me-2 custom-search-input"
+                       placeholder="책 제목 또는 작가를 검색하세요">
+                <button class="btn btn-outline-dark" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
     <!-- 책 검색 결과 목록 -->
     <table id="description" class="table">
         <tbody>
