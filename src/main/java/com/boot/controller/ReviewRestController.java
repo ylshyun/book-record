@@ -78,7 +78,11 @@ public class ReviewRestController {
             @PathVariable String isbn,
             @PathVariable Long reviewId,
             @AuthenticationPrincipal CustomMemberDetails memberDetails) {
-        reviewService.deleteReview(reviewId, memberDetails.getUsername());
-        return ResponseEntity.ok("리뷰 삭제가 완료되었습니다.");
+        try{
+            reviewService.deleteReview(reviewId, memberDetails.getUsername());
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제에 실패했습니다.");
+        }
     }
 }
