@@ -65,9 +65,9 @@ function loadReviewList(page=0, size=10) {
             // 페이징
             pagination.innerText='';
 
-            for (let i = 1; i < response.data.totalPages; i++) {
+            for (let i = 0; i < response.data.totalPages; i++) {
                 const pageButton = document.createElement("button");
-                pageButton.textContent = i;
+                pageButton.textContent = i+1;
                 pageButton.onclick = () => loadReviewList(i, size);
                 pagination.appendChild(pageButton);
             }
