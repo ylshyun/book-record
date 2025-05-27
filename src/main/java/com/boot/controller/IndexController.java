@@ -5,6 +5,7 @@ import com.boot.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model, @RequestParam(defaultValue = "0") int page) {
-        Page<ReviewBookDTO> reviews = reviewService.findAllReviews(PageRequest.of(page, 10));
+        Page<ReviewBookDTO> reviews = reviewService.findAllReviews(PageRequest.of(page, 10, Sort.by("modifiedDate").descending()));
         model.addAttribute("reviews", reviews);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", reviews.getTotalPages());
