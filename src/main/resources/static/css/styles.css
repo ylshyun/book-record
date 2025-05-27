@@ -1295,6 +1295,12 @@ textarea.form-control {
   margin: 50px auto;
   text-align: center;
 }
+.review-card{
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px;
+}
 .book-info p{
   font-size: 1.1em;
 }

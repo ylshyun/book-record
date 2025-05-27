@@ -1,4 +1,5 @@
 const isbn = document.getElementById("bookIsbn").textContent;
+const pagination = document.getElementById("pagination");
 
 // 리뷰 저장
 function submitReview(event) {
@@ -39,8 +40,6 @@ function loadReviewList(page=0, size=10) {
                 const div = document.createElement("div");
                 div.classList.add("review-card");
                 div.id = `review-${review.reviewId}`;
-                console.log(review.memberEmail);
-                console.log(loggedInUserEmail);
 
                 let buttons = '';
                 if (review.memberEmail === loggedInUserEmail) {
@@ -64,12 +63,11 @@ function loadReviewList(page=0, size=10) {
             });
 
             // 페이징
-            const pagination = document.getElementById("pagination");
             pagination.innerText='';
 
-            for (let i = 0; i < response.data.totalPages; i++) {
+            for (let i = 1; i < response.data.totalPages; i++) {
                 const pageButton = document.createElement("button");
-                pageButton.textContent = i + 1;
+                pageButton.textContent = i;
                 pageButton.onclick = () => loadReviewList(i, size);
                 pagination.appendChild(pageButton);
             }
@@ -101,6 +99,8 @@ function showEditForm(reviewId) {
     // 기존 목록을 숨기고 수정 폼으로 교체
     editForm.style.display = "block";
     reviewCard.style.display = "none";
+    // 페이징 숨기기
+    pagination.style.display = "none";
 }
 
 // 리뷰 수정 취소
@@ -108,8 +108,9 @@ function cancelEdit(reviewId) {
     // 수정 폼 숨기기
     document.getElementById("editReviewForm").style.display = "none";
 
-    // 기존 리뷰 목록 다시 보이게 하기
+    // 기존 리뷰 목록, 페이징 다시 보이게 하기
     loadReviewList();
+    pagination.style.display = "block";
 }
 
 // 리뷰 수정
