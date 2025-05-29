@@ -34,19 +34,17 @@
 			</div>
 		</div>
 		<!-- 페이징 -->
-		<div class="mypage-pagination" th:if="${totalPages > 1}">
-    <span th:if="${currentPage > 1}">
-        <a th:href="@{/{page}(page=${currentPage - 1})}">«</a>
-    </span>
+		<div th:if="${totalPages>1}">
+			<a th:if="${currentPage > 0}" th:href="@{/(page=${currentPage - 1})}">&lt;</a>
+			<a th:if="${startPage > 0}" th:href="@{/(page=0)}">1</a>
+			<span th:if="${startPage > 1}">...</span>
 
-			<span th:each="i : ${#numbers.sequence(1, totalPages)}">
-        <a th:href="@{/{page}(page=${i - 1})}" th:text="${i+1}"
-           th:classappend="${currentPage + 1 == i} ? 'active'"></a>
+			<span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+				<a th:href="@{/(page=${i})}" th:text="${i + 1}" th:classappend="${currentPage == i}?'active'"></a>
     </span>
-
-			<span th:if="${currentPage < totalPages - 1}">
-        <a th:href="@{/{page}(page=${currentPage + 1})}">»</a>
-    </span>
+			<span th:if="${endPage < totalPages - 2}">...</span>
+			<a th:if="${endPage < totalPages - 1}" th:href="@{/(page=${totalPages - 1})}" th:text="${totalPages}"></a>
+			<a th:if="${currentPage < totalPages - 1}" th:href="@{/(page=${currentPage + 1})}">&gt;</a>
 		</div>
 	</div>
 </div>
