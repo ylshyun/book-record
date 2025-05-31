@@ -1385,6 +1385,11 @@ textarea.form-control {
   cursor: not-allowed;
 }
 
+.pagination button.active{
+  background-color:#212529;
+  color: white;
+}
+
 /* login.html */
 .login-wrapper {
   flex: 1;

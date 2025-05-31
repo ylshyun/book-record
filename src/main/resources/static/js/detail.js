@@ -62,14 +62,55 @@ function loadReviewList(page=0, size=10) {
                 reviewList.appendChild(div);
             });
 
+            const totalPages = response.data.totalPages;
+            const currentPage = response.data.number;
+            const displayPages = 5;
+            let startPage;
+            let endPage;
+
+            if (totalPages <= displayPages) {
+                startPage = 0;
+                endPage = totalPages - 1;
+            } else if (currentPage <= 2) {
+                startPage = 0;
+                endPage = displayPages - 1;
+            } else if (currentPage >= totalPages - 3){
+                startPage = totalPages - displayPages;
+                endPage = totalPages - 1;
+            } else{
+                startPage = currentPage -2;
+                endPage = currentPage + 2;
+            }
+
             // 페이징
             pagination.innerText='';
-
-            for (let i = 0; i < response.data.totalPages; i++) {
-                const pageButton = document.createElement("button");
-                pageButton.textContent = i+1;
-                pageButton.onclick = () => loadReviewList(i, size);
-                pagination.appendChild(pageButton);
+            if (totalPages > 1){
+                if (response.data.number > 0){
+                    const prevButton = document.createElement("button");
+                    prevButton.textContent = "<";
+                    prevButton.onclick = () => loadReviewList(currentPage - 1, size);
+                    pagination.appendChild(prevButton);
+                }
+                if (startPage > 0){
+                    const ellipsis = document.createElement("text");
+                    ellipsis.textContent = "•••";
+                    pagination.appendChild(ellipsis);
+                }
+                for (let i = 0; i < totalPages; i++) {
+                    const pageButton = document.createElement("button");
+                    pageButton.textContent = i+1;
+                    if (i === currentPage){
+                        pageButton.classList.add("active");
+                    }
+                    pageButton.onclick = () => loadReviewList(i, size);
+                    pagination.appendChild(pageButton);
+                }
+                if (totalPages - 1 > currentPage) {
+                    const nextButton = document.createElement("button");
+                    nextButton.textContent = ">";
+                    nextButton.onclick = () => loadReviewList(currentPage + 1, size)
+                    pagination.appendChild(nextButton);
+                }
             }
         })
         .catch(error => {
