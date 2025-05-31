@@ -44,6 +44,47 @@
 			<input type="submit" value="가입하기" class="btn login-submit-btn">
 		</form>
 	</div>
+	<script>
+        let isEmailChecked = false;
+
+        function resetCheckStatus() {
+            isEmailChecked = false;
+        }
+
+        function checkEmail() {
+            const email = document.getElementById("memberEmail").value;
+            const emailOption = document.getElementById("memberEmailOption").value;
+            const fullEmail = email + "@" + emailOption;
+
+            if (!email) {
+                alert("이메일을 입력해주세요.");
+                return;
+            }
+
+            axios.get(`api/member/check-email?email=${fullEmail}`)
+                .then(response => {
+                    if (response.data.exists) {
+                        alert("이미 사용 중인 이메일입니다.");
+                        isEmailChecked = false;
+                    } else {
+                        alert("사용 가능한 이메일입니다.");
+                        isEmailChecked = true;
+                    }
+                })
+                .catch(error => {
+                    console.error("이메일 중복 확인 오류:", error);
+                    alert("이메일 중복 확인 중 오류가 발생했습니다.");
+                });
+        }
+
+        function validateForm() {
+            if (!isEmailChecked) {
+                alert("이메일 중복 확인을 해주세요.");
+                return false;
+            }
+            return true;
+        }
+	</script>
 </div>
 </body>
 </html>
