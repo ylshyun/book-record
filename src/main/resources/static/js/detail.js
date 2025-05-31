@@ -84,26 +84,43 @@ function loadReviewList(page=0, size=10) {
 
             // 페이징
             pagination.innerText='';
-            if (totalPages > 1){
-                if (response.data.number > 0){
+            if (totalPages > 1) {
+                if (response.data.number > 0) {
                     const prevButton = document.createElement("button");
                     prevButton.textContent = "<";
                     prevButton.onclick = () => loadReviewList(currentPage - 1, size);
                     pagination.appendChild(prevButton);
                 }
                 if (startPage > 0){
-                    const ellipsis = document.createElement("text");
+                    const firstButton = document.createElement("button");
+                    firstButton.textContent = "1";
+                    firstButton.onclick = () => loadReviewList(0, size);
+                    pagination.appendChild(firstButton);
+                }
+                if (startPage > 1) {
+                    const ellipsis = document.createElement("span");
                     ellipsis.textContent = "•••";
                     pagination.appendChild(ellipsis);
                 }
-                for (let i = 0; i < totalPages; i++) {
+                for (let i = startPage; i <= endPage; i++) {
                     const pageButton = document.createElement("button");
-                    pageButton.textContent = i+1;
-                    if (i === currentPage){
+                    pageButton.textContent = i + 1;
+                    if (i === currentPage) {
                         pageButton.classList.add("active");
+                        pageButton.disabled = true;
                     }
                     pageButton.onclick = () => loadReviewList(i, size);
                     pagination.appendChild(pageButton);
+                }
+                if (endPage < totalPages - 2) {
+                    const ellipsis = document.createElement("span");
+                    ellipsis.textContent = "•••";
+                    pagination.appendChild(ellipsis);
+                }
+                if (endPage < totalPages - 1) {
+                    const endButton = document.createElement("button");
+                    endButton.textContent = totalPages;
+                    pagination.appendChild(endButton);
                 }
                 if (totalPages - 1 > currentPage) {
                     const nextButton = document.createElement("button");
