@@ -6,6 +6,7 @@ import com.boot.service.BookService;
 import com.boot.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,14 +28,38 @@ public class BookController {
     // 검색한 책 리스트 보기
     @GetMapping("/search")
     public String searchBooks(@RequestParam("keyword") String keyword,
-                              @PageableDefault(size = 10) Pageable pageable, Model model) throws Exception {
+                              @RequestParam(defaultValue = "0") int page, Model model) throws Exception {
         // 검색어로 API 호출
-        Page<BookDTO> books = bookService.searchBooks(keyword, pageable);
+        Page<BookDTO> books = bookService.searchBooks(keyword, PageRequest.of(page, 10));
+
+        int currentPage = books.getNumber();
+        int totalPages = books.getTotalPages();
+
+        int displayPages = 5;
+        int startPage;
+        int endPage;
+
+        if (totalPages <= displayPages) {
+            startPage = 0;
+            endPage = totalPages - 1;
+        } else if (currentPage <= 2) {
+            startPage = 0;
+            endPage = displayPages - 1;
+        } else if (currentPage >= totalPages - 3){
+            startPage = totalPages - displayPages;
+            endPage = totalPages - 1;
+        } else{
+            startPage = currentPage -2;
+            endPage = currentPage + 2;
+        }
+
         // 검색 결과를 뷰로 전달
         model.addAttribute("bookDtoList", books);
-        model.addAttribute("currentPage", pageable.getPageNumber());
-        model.addAttribute("totalPages", books.getTotalPages());
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         return "book/search";
     }
 

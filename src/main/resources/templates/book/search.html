@@ -3,50 +3,52 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/default}">
 <div class="content-container" layout:fragment="content">
-    <div class="py-5">
-        <div class="container custom-search-container">
-            <form class="d-flex justify-content-center align-items-center custom-search-form"
-                  th:action="@{/books/search}" method="get">
-                <input type="text" name="keyword" th:value="${keyword}"
-                       class="form-control me-2 custom-search-input"
-                       placeholder="책 제목 또는 작가를 검색하세요">
-                <button class="btn btn-outline-dark" type="submit">Search</button>
-            </form>
-        </div>
-    </div>
-    <!-- 책 검색 결과 목록 -->
-    <table id="description" class="table">
-        <tbody>
-        <tr th:each="bookDTO : ${bookDtoList}">
-            <td>
-                <img id="bookImg" th:src="@{${bookDTO.bookImageURL}}" alt="Book Image"/>
-            </td>
-            <td style="text-align: left;">
-                <a id="bookTitle" th:href="@{/books/{Disbn}(Disbn=${bookDTO.bookIsbn})}"
-                   th:text="${bookDTO.bookTitle}">title</a><br/>
-                <span id="bookAuthor" th:text="${#strings.replace(bookDTO.bookAuthor, '^', ', ')}"></span>
-                <span th:if="${not #strings.isEmpty(bookDTO.bookAuthor)}" th:text="저."></span>
-                <span id="bookPublisher" th:text="${bookDTO.bookPublisher}"></span><br/><br/>
-                <span th:text="${#strings.length(bookDTO.bookDescription)>130} ?
+	<div class="py-5">
+		<div class="container custom-search-container">
+			<form class="d-flex justify-content-center align-items-center custom-search-form"
+			      th:action="@{/books/search}" method="get">
+				<input type="text" name="keyword" th:value="${keyword}"
+				       class="form-control me-2 custom-search-input"
+				       placeholder="책 제목 또는 작가를 검색하세요">
+				<button class="btn btn-outline-dark" type="submit">Search</button>
+			</form>
+		</div>
+	</div>
+	<!-- 책 검색 결과 목록 -->
+	<table id="description" class="table">
+		<tbody>
+		<tr th:each="bookDTO : ${bookDtoList}">
+			<td>
+				<img id="bookImg" th:src="@{${bookDTO.bookImageURL}}" alt="Book Image"/>
+			</td>
+			<td style="text-align: left;">
+				<a id="bookTitle" th:href="@{/books/{Disbn}(Disbn=${bookDTO.bookIsbn})}"
+				   th:text="${bookDTO.bookTitle}">title</a><br/>
+				<span id="bookAuthor" th:text="${#strings.replace(bookDTO.bookAuthor, '^', ', ')}"></span>
+				<span th:if="${not #strings.isEmpty(bookDTO.bookAuthor)}" th:text="저."></span>
+				<span id="bookPublisher" th:text="${bookDTO.bookPublisher}"></span><br/><br/>
+				<span th:text="${#strings.length(bookDTO.bookDescription)>130} ?
                 ${#strings.substring(bookDTO.bookDescription,0,130)}+'...' : ${bookDTO.bookDescription}"></span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <!-- 페이징 -->
-    <table th:if="${!bookDtoList.isEmpty()}" class="pagination-table">
-        <tr>
-            <td th:if="${currentPage > 0}">
-                <a th:href="@{/books/search(keyword=${keyword}, page=${currentPage - 1})}">«</a>
-            </td>
-            <td th:each="i : ${#numbers.sequence(1, totalPages)}">
-                <a th:href="@{/books/search(keyword=${keyword}, page=${i - 1})}" th:text="${i}"
-                   th:classappend="${i == currentPage + 1} ? 'active' : ''"></a>
-            </td>
-            <td th:if="${currentPage < totalPages - 1}">
-                <a th:href="@{/books/search(keyword=${keyword}, page=${currentPage + 1})}">»</a>
-            </td>
-        </tr>
-    </table>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+	<!-- 페이징 -->
+	<div th:if="${totalPages>1}" class="pagination">
+		<a th:if="${currentPage > 0}" th:href="@{/books/search(keyword=${keyword}, page=${currentPage - 1})}"
+		   class="page-btn">&lt;</a>
+
+		<a th:if="${startPage > 0}" th:href="@{/book/search(keyword=${keyword}, page=0)}" class="page-btn">1</a>
+		<span th:if="${startPage > 1}">&hellip;</span>
+
+		<span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+                <a th:href="@{/books/search(keyword=${keyword}, page=${i})}" th:text="${i+1}"
+                   th:classappend="${i == currentPage} ? 'active page-btn' : 'page-btn'"></a>
+            </span>
+		<span th:if="${endPage < totalPages - 2}">&hellip;</span>
+		<a th:if="${endPage < totalPages - 1}" th:href="@{/book/search(keyword=${keyword}, page=${totalPages - 1})}"
+		   th:text="${totalPages}" class="page-btn"></a>
+		<a th:if="${ endPage < totalPages - 1}" th:href="@{/books/search(keyword=${keyword}, page=${currentPage + 1})}" class="page-btn">&gt;</a>
+	</div>
 </div>
 </html>
