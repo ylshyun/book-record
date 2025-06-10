@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@Profile("dev")
+@Profile("dev") // 로컬 환경에서만 사용하도록 설정
 @RequiredArgsConstructor
 public class DataInitializer implements ApplicationRunner {
 
@@ -53,8 +53,8 @@ public class DataInitializer implements ApplicationRunner {
             List<Member> members = memberRepository.findAll();
 
             for (int i = 0; i < 100; i++) {
-                Book book = books.get(i % books.size());
-                Member member = members.get(i % members.size());
+                Book book = books.get(i % books.size());    // 모든 리뷰에 순차적으로 책 연결
+                Member member = members.get(i % members.size());    // 모든 리뷰에 순차적으로 회원 연결
 
                 reviewRepository.save(Review.builder()
                         .member(memberRepository.findByMemberEmail("memberEmail" + i + "@gmail.com"))
