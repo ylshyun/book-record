@@ -19,6 +19,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(Model model, @RequestParam(defaultValue = "0") int page) {
+
         Page<ReviewBookDTO> reviews = reviewService.findAllReviews(PageRequest.of(page, 10, Sort.by("modifiedDate").descending()));
         int totalPages = reviews.getTotalPages();   // 전체 페이지 수
         int currentPage = reviews.getNumber();  // 현재 페이지 번호
