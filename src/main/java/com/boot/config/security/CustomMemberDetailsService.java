@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CustomMemberDetailsService  implements UserDetailsService {
+public class CustomMemberDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
