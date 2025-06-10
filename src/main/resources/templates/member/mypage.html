@@ -6,7 +6,7 @@
 	<div class="mypage-body">
 		<div class="mypage-member-info">
 			<div class="mypage-member-header">
-				<h3>회원 정보</h3>
+				<h2>회원 정보</h2>
 				<div class="mypage-member-header-buttons">
 					<a th:href="@{/member/update}">
 						<button class="btn btn-outline-dark">수정</button>
@@ -42,11 +42,15 @@
 		</div>
 		<!-- 페이징 -->
 		<div class="pagination" th:if="${totalPages > 1}">
-			<button th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
-			        th:onclick="'location.href=\'/mypage?page=' + ${i} + '&size=10\''"
+			<a th:if="${currentPage>0}" th:href="@{/mypage(page=${currentPage - 1})}" class="page-btn">&lt;</a>
+			<a th:if="${startPage>0}" th:href="@{/mypage(page=${0})}" class="page-btn">1</a>
+			<button th:each="i : ${#numbers.sequence(startPage, endPage)}"
+			        th:href="@{/mypage(page=${i})}"
 			        th:text="${i + 1}"
 			        th:classappend="${i == currentPage} ? 'active' : ''">
 			</button>
+			<a th:if="${endPage<totalPages - 1}" th:href="@{/mypage(page=${totalPages - 1})}" th:text="${totalPages}" class="page-btn"></a>
+			<a th:if="${currentPage<totalPages - 1}" th:href="@{/mypage(page=${currentPage+1})}">&gt;</a>
 		</div>
 	</div>
 	<script>

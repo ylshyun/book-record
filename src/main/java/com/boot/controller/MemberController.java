@@ -69,10 +69,33 @@ public class MemberController {
                          @RequestParam(defaultValue = "0") int page,
                          @RequestParam(defaultValue = "10") int size) {
         Page<ReviewBookDTO> reviews = reviewService.getReviewsWithBooks(memberDetails.getUsername(), page, size);
+        int currentPage = reviews.getNumber();
+        int totalPages = reviews.getTotalPages();
+
+        int displayPage = 5;
+        int startPage;
+        int endPage;
+
+        if (totalPages <= displayPage) {
+            startPage = 0;
+            endPage = totalPages - 1;
+        } else if (currentPage >= totalPages - 3) {
+            startPage = totalPages - displayPage;
+            endPage = totalPages - 1;
+        } else if (currentPage >= 2){
+            startPage = 0;
+            endPage = displayPage - 1;
+        } else {
+            startPage = currentPage - 2;
+            endPage = currentPage + 2;
+        }
+
         model.addAttribute("memberName", memberDetails.getName());
         model.addAttribute("memberEmail", memberDetails.getUsername());
-        model.addAttribute("currentPage", reviews.getNumber());
-        model.addAttribute("totalPages", reviews.getTotalPages());
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
         model.addAttribute("reviews", reviews);
         return "member/mypage";
     }
