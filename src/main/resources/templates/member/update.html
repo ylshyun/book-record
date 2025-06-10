@@ -5,14 +5,15 @@
 <head>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
+<body>
 <div class="content-container" layout:fragment="content">
-	<body>
+	<div class="update-wrapper">
 	<div class="update-container">
 		<h1>개인정보 수정</h1>
 
 		<!-- 비밀번호 인증 -->
 		<div id="password-auth-section">
-			<p>개인정보 수정을 진행하려면 현재 비밀번호를 입력해주세요</p>
+			<p>개인정보 수정을 진행하려면 현재 비밀번호를 입력해주세요</p><br>
 			<form id="password-auth-form">
 				<label for="current-password">현재 비밀번호</label>
 				<input type="password" id="current-password" name="currentPassword" required>
@@ -22,10 +23,12 @@
 
 		<!-- 수정 폼 -->
 		<div id="update-form-section" style="display: none;">
-			<form th:action="@{/member/update-info}" method="post" th:object="${memberDTO}" onsubmit="return validateForm()">
+			<form th:action="@{/member/update-info}" method="post" th:object="${memberDTO}"
+			      onsubmit="return validateForm()">
 				<input type="hidden" name="_method" value="put">
 
 				<!-- 이메일 (수정 불가) -->
+				<br>
 				<label for="email">이메일은 수정이 불가능합니다.</label>
 				<input type="email" id="email" name="memberEmail" th:value="${memberDTO.memberEmail}" readonly>
 
@@ -37,7 +40,8 @@
 				<!-- 새 비밀번호 -->
 				<label for="new-password">새 비밀번호</label>
 				<input type="password" name="memberPassword" id="new-password">
-				<span th:if="${#fields.hasErrors('memberPassword')}" th:errors="*{memberPassword}" style="color: red;"></span>
+				<span th:if="${#fields.hasErrors('memberPassword')}" th:errors="*{memberPassword}"
+				      style="color: red;"></span>
 				<span id="password-error" class="error-message" style="color: red;"></span>
 				<br>
 
@@ -53,11 +57,12 @@
 			</form>
 		</div>
 	</div>
+	</div>
 	<script>
         document.getElementById('auth-button').addEventListener('click', () => {
             const password = document.getElementById('current-password').value;
 
-            axios.post('/api/member/verify-password', { password: password })
+            axios.post('/api/member/verify-password', {password: password})
                 .then((response) => {
                     if (response.data.success) {
                         alert('비밀번호 인증 성공!');
@@ -88,11 +93,15 @@
 
             if (newPassword.length < 8 || newPassword.length > 20) {
                 passwordError.textContent = "비밀번호는 8~20자로 설정해야 합니다.";
+                document.getElementById('new-password').value = '';
+                document.getElementById('confirm-password').value = '';
                 valid = false;
             }
 
             if (newPassword !== confirmPassword) {
                 confirmPasswordError.textContent = "새 비밀번호가 일치하지 않습니다.";
+                document.getElementById('new-password').value = '';
+                document.getElementById('confirm-password').value = '';
                 valid = false;
             }
 
@@ -111,6 +120,6 @@
             }
         });
 	</script>
-	</body>
 </div>
+</body>
 </html>
