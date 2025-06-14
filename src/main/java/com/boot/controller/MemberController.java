@@ -118,26 +118,26 @@ public class MemberController {
 
     // 회원정보 수정
     @PutMapping("/member/update-info")
-    public String updateMemberInfo(@Valid @ModelAttribute("memberDTO") MemberSignUpDTO memberDTO,
+    public String updateMemberInfo(@Valid @ModelAttribute("memberDTO") MemberUpdateDTO memberDTO,
                                    BindingResult bindingResult, Model model,
                                    @AuthenticationPrincipal CustomMemberDetails memberDetails) {
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("updateError", bindingResult.getAllErrors());
+            model.addAttribute("customError", "입력값을 확인해주세요.");
             return "member/update";
         }
 
         try {
-            // 비밀번호 & 이메일 검증
-            memberService.validatePasswordAndEmail(memberDTO.getMemberPassword(), memberDTO.getMemberEmail());
+            // 비밀번호가 입력된 경우만 검증
+            if (memberDTO.getMemberPassword() != null && !memberDTO.getMemberPassword().isBlank()) {
+                memberService.validatePasswordAndEmail(memberDTO.getMemberPassword(), memberDTO.getMemberEmail());
+            }
 
             // 회원 정보 수정
             memberService.updateMemberInfo(memberDTO, memberDetails.getUsername());
 
-            // 수정된 회원 정보를 다시 가져오기
+            // 수정된 회원 정보로 SecurityContext 갱신
             Member updatedMember = memberRepository.findByMemberEmail(memberDetails.getUsername());
-
-            // 새로운 SecurityContext 업데이트
             CustomMemberDetails updatedMemberDetails = CustomMemberDetails.builder()
                     .name(updatedMember.getMemberName())
                     .password(updatedMember.getMemberPassword())

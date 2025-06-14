@@ -3,7 +3,6 @@ package com.boot.dto;
 import lombok.Data;
 
 @Data
-public class MemberInfoDTO {
-    private String name;
+public class PasswordCheckDTO {
     private String password;
 }

@@ -1,6 +1,7 @@
 package com.boot.service;
 
 import com.boot.dto.MemberSignUpDTO;
+import com.boot.dto.MemberUpdateDTO;
 import com.boot.entity.Member;
 import com.boot.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class MemberService {
     //  비밀번호 유효성 검사
     @Transactional(readOnly = true)
     public void validatePasswordAndEmail(String memberPassword, String memberEmail) {
-        if (memberPassword.contains(memberEmail)){
+        if (memberPassword.contains(memberEmail)) {
             throw new IllegalArgumentException("비밀번호에는 이메일을 포함할 수 없습니다.");
         }
     }
@@ -55,7 +56,7 @@ public class MemberService {
 
     // 회원정보 수정
     @Transactional
-    public void updateMemberInfo(MemberSignUpDTO memberDTO, String username) {
+    public void updateMemberInfo(MemberUpdateDTO memberDTO, String username) {
         Member member = memberRepository.findByMemberEmail(username);
 
         if (member == null) {
@@ -64,14 +65,14 @@ public class MemberService {
 
         // 비밀번호가 변경된 경우
         if (memberDTO.getMemberPassword() != null && !memberDTO.getMemberPassword().isBlank()) {
-            // 비밀번호 유효성 검사
             validatePasswordAndEmail(memberDTO.getMemberPassword(), member.getMemberEmail());
-            // 비밀번호 암호화
             String encodedPassword = passwordEncoder.encode(memberDTO.getMemberPassword());
-            member.update(encodedPassword, memberDTO.getMemberName());
-        } else {
-            // 비밀번호 변경이 없는 경우 기존 비밀번호를 유지하고 이름만 수정
-            member.update(member.getMemberPassword(), memberDTO.getMemberName());
+            member.updateMemberPassword(encodedPassword);
+        }
+
+        // 이름이 변경된 경우
+        if (memberDTO.getMemberName() != null && !memberDTO.getMemberName().isBlank() && !memberDTO.getMemberName().equals(member.getMemberName())) {
+            member.updateMemberName(memberDTO.getMemberName());
         }
     }
 
