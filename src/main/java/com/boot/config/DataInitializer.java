@@ -31,7 +31,8 @@ public class DataInitializer implements ApplicationRunner {
     private final BookRepository bookRepository;
 
     public void run(ApplicationArguments args) throws Exception {
-        List<String> keywords = List.of("자바", "알고리즘", "스프링부트", "jpa", "데이터베이스","java","database");
+        //  인덱스 페이지네이션 테스트용 데이터
+        List<String> keywords = List.of("자바", "알고리즘", "스프링부트", "jpa", "데이터베이스", "java", "database", "mysql");
 
         for (String keyword : keywords) {
             List<BookDTO> apiBooks = naverApi.searchBooksByKeyword("%" + keyword + "%");
@@ -62,6 +63,26 @@ public class DataInitializer implements ApplicationRunner {
                         .reviewTitle("리뷰 제목 " + i)
                         .book(book)
                         .member(member)
+                        .build());
+            }
+
+            //  마이페이지 페이지네이션 테스트용 데이터
+            Member testMember = memberRepository.save(Member.builder()
+                    .memberName("testMember")
+                    .memberEmail("testMemberEmail@gmail.com")
+                    .memberPassword(passwordEncoder.encode("testMemberPassword"))
+                    .role("ROLE_MEMBER")
+                    .build());
+
+            System.out.println("total books = " + books.size());
+
+            for (int i = 0; i < 70; i++) {
+                Book testBook = books.get(i);
+                reviewRepository.save(Review.builder()
+                        .book(testBook)
+                        .member(testMember)
+                        .reviewContent("이 리뷰는 테스트용으로 작성되었으며, 리뷰의 내용은 50자 이상이어야 합니다. " + i)
+                        .reviewTitle("리뷰 제목 " + i)
                         .build());
             }
         }

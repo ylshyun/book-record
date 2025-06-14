@@ -82,7 +82,7 @@ public class MemberController {
         } else if (currentPage >= totalPages - 3) {
             startPage = totalPages - displayPage;
             endPage = totalPages - 1;
-        } else if (currentPage >= 2){
+        } else if (currentPage <= 2){
             startPage = 0;
             endPage = displayPage - 1;
         } else {

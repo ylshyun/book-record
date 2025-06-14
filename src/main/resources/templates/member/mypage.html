@@ -33,7 +33,8 @@
 						<img th:src="${review.bookImageUrl}" alt="책 이미지">
 						<div class="mypage-book-text">
 							<p th:text="${review.bookTitle}"></p>
-							<p th:if="${not #strings.isEmpty(review.bookAuthor)}" th:text="${review.bookAuthor} + ' 저'"></p>
+							<p th:if="${not #strings.isEmpty(review.bookAuthor)}"
+							   th:text="${review.bookAuthor} + ' 저'"></p>
 							<p th:text="${review.bookPublisher}"></p>
 						</div>
 					</a>
@@ -44,13 +45,16 @@
 		<div class="pagination" th:if="${totalPages > 1}">
 			<a th:if="${currentPage>0}" th:href="@{/mypage(page=${currentPage - 1})}" class="page-btn">&lt;</a>
 			<a th:if="${startPage>0}" th:href="@{/mypage(page=${0})}" class="page-btn">1</a>
-			<button th:each="i : ${#numbers.sequence(startPage, endPage)}"
-			        th:href="@{/mypage(page=${i})}"
-			        th:text="${i + 1}"
-			        th:classappend="${i == currentPage} ? 'active' : ''">
-			</button>
-			<a th:if="${endPage<totalPages - 1}" th:href="@{/mypage(page=${totalPages - 1})}" th:text="${totalPages}" class="page-btn"></a>
-			<a th:if="${currentPage<totalPages - 1}" th:href="@{/mypage(page=${currentPage+1})}">&gt;</a>
+			<span th:if="${startPage > 1}">&hellip;</span>
+			<span th:each="i : ${#numbers.sequence(startPage, endPage)}">
+        <a th:href="@{/(page=${i})}" th:text="${i + 1}"
+           th:classappend="${currentPage == i} ? 'active page-btn' : 'page-btn'"></a>
+    </span>
+			<span th:if="${endPage < totalPages - 2}">&hellip;</span>
+			<a th:if="${endPage<totalPages - 1}" th:href="@{/mypage(page=${totalPages - 1})}" th:text="${totalPages}"
+			   class="page-btn"></a>
+			<a th:if="${currentPage<totalPages - 1}" th:href="@{/mypage(page=${currentPage+1})}"
+			   class="page-btn">&gt;</a>
 		</div>
 	</div>
 	<script>
