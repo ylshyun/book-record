@@ -209,14 +209,17 @@ function deleteReview(reviewId){
 
     axios.delete(`/api/books/${isbn}/reviews/${reviewId}`)
         .then(response => {
-        alert("리뷰가 삭제되었습니다.");
-        loadReviewList();
-        document.getElementById("reviewForm").style.display = "block" // 리뷰 작성 폼 다시 생성
-    })
-    .catch(error => {
-        console.error("리뷰 삭제 중 오류가 발생했습니다.", error);
-        alert("리뷰 삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
-    })
+            alert("리뷰가 삭제되었습니다.");
+            loadReviewList();
+            const reviewForm = document.getElementById("reviewForm");
+            if (reviewForm) {
+                reviewForm.style.display = "block"; // 리뷰 작성 폼 다시 생성
+            }
+        })
+        .catch(error => {
+            console.error("리뷰 삭제 중 오류가 발생했습니다.", error);
+            alert("리뷰 삭제 중 오류가 발생했습니다. 다시 시도해주세요.");
+        })
         .finally(()=> {
             if (deleteButton){
                 deleteButton.disabled = false; // 삭제 버튼 활성화
