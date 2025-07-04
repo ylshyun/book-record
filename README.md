@@ -23,7 +23,7 @@
 <br>
 
 ## ✍️ 프로젝트 아키텍처
-![아키텍처](https://github.com/user-attachments/assets/8782e662-0415-4b41-be7e-f43c1f4b369a)
+<img width="900" height="400" src="https://github.com/user-attachments/assets/8782e662-0415-4b41-be7e-f43c1f4b369a" />
 
 <br>
 
