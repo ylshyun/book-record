@@ -33,7 +33,7 @@
 <br>
 
 ## 📌 API 명세
-<img width="788" alt="Image" src="https://github.com/user-attachments/assets/1e4a9a64-7298-431c-b665-58ffcc69ebc9" />
+<img width="900" alt="Image" src="https://github.com/user-attachments/assets/1e4a9a64-7298-431c-b665-58ffcc69ebc9" />
 
 <br>   
 
