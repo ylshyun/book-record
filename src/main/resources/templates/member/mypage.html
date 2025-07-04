@@ -47,7 +47,7 @@
 			<a th:if="${startPage>0}" th:href="@{/mypage(page=${0})}" class="page-btn">1</a>
 			<span th:if="${startPage > 1}">&hellip;</span>
 			<span th:each="i : ${#numbers.sequence(startPage, endPage)}">
-        <a th:href="@{/(page=${i})}" th:text="${i + 1}"
+        <a th:href="@{/mypage(page=${i})}" th:text="${i + 1}"
            th:classappend="${currentPage == i} ? 'active page-btn' : 'page-btn'"></a>
     </span>
 			<span th:if="${endPage < totalPages - 2}">&hellip;</span>
